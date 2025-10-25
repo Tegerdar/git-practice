@@ -13,6 +13,8 @@ int main() {
     while ((c = getchar()) != EOF) {
         putchar(c);
     }
-    
+
     putchar('\n');
+
+    fclose(text);
 }
