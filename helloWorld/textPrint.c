@@ -6,4 +6,11 @@ int main() {
         printf("Error: couldn't open file.");
         return 1;
     }
+    
+    stdin = text;
+    int c;
+
+    while ((c = getchar()) != EOF) {
+        putchar(c);
+    }
 }
