@@ -7,10 +7,9 @@ int main() {
         return 1;
     }
     
-    stdin = text;
     int c;
 
-    while ((c = getchar()) != EOF) {
+    while ((c = fgetc(text)) != EOF) {
         putchar(c);
     }
 
