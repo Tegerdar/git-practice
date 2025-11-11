@@ -1,0 +1,12 @@
+# Ignore big or binary files
+*.dtklog
+*.log
+*.zip
+*.tar
+*.gz
+*.exe
+*.bin
+*.iso
+
+# Ignore JDK folders
+Java/
