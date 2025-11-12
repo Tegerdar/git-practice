@@ -10,6 +10,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Main {
+    public class travelData {
+        String city;
+        String date;
+        //TODO specify this
+        int number1;
+        int number2;
+        String vehicle;
+
+        // Konstruktors (lai ērti izveidotu objektu)
+        public travelData(String name, String surname, int grade) {
+            this.city = city;
+            this.date = date;
+            this.number1 = number1;
+            this.number2 = number2;
+            this.vehicle = vehicle;
+        }
+        
+        public String toString() {
+            return city + ";" + date + ";" + number1 + ";" + number2 + ";" + vehicle;
+        }
+    }
+
     public static Scanner sc;
     public static void main(String[] args) {
         sc = new Scanner(System.in);

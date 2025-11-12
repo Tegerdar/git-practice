@@ -17,7 +17,7 @@ public class Main {
             guess = sqrtCustom(x, guess);
         }
         
-        System.out.printf("%.2f", guess);
+        System.out.printf("%.2f\n", guess);
     }
 
     public static float sqrtCustom(float x, float guess) {
