@@ -27,7 +27,7 @@ public class Main {
 
 			switch (cmd) {
                 case "add":
-                    String data = sc.next();
+                    String data = sc.nextLine().trim();
                     add(data);
                     break;
 
@@ -37,8 +37,8 @@ public class Main {
                     break;
                 
                 case "edit":
-                    data = sc.next();
-                    //edit(data);
+                    data = sc.nextLine().trim();
+                    edit(data);
                     break;
 
                 case "print":
@@ -97,7 +97,7 @@ public class Main {
         }
 
         // removes line
-        lines.remove(lineNum - 1);
+        lines.remove(lineNum);
 
         rewriteFile(lines, file);
 
@@ -112,7 +112,7 @@ public class Main {
             int lineId = Integer.parseInt(parts[0]);
 
             if (lineId == id) {
-                return lineNum;
+                return (lineNum-1);
             }
 
             ++lineNum;
@@ -163,7 +163,7 @@ public class Main {
         String vehicle = parts[5];
 
         // after check on the style print new line in db.csv
-        if (checkLine(line)) {
+        if (checkLine(line, 'a')) {
             try (FileWriter writer = new FileWriter(file, true)) {
                 writer.append(id + ";");
 
@@ -180,10 +180,10 @@ public class Main {
 
                 city = formatted.toString().trim();
 
-                writer.append(city.toLowerCase() + ";");
+                writer.append(city + ";");
                 writer.append(date + ";");
                 writer.append(days + ";");
-                writer.append(price + ";");
+                writer.append(String.format("%.2f;", price));
                 writer.append(vehicle.toUpperCase());
                 writer.append("\n");
 
@@ -193,25 +193,30 @@ public class Main {
             }
         }
     }
-    
-    public static boolean checkLine(String line) {
+    //TODO
+    public static boolean checkLine(String line, char status) {
+        // status: a - add, e - edit
         String[] parts = line.split(";");
 
         // TODO before sending chande just on db.csv
         String file = "/home/vlad/git-practice/university/np/db.csv";
 
-        try {
-            Integer.parseInt(parts[3]);
-        } catch (NumberFormatException e) {
-            System.out.println("wrong day count");
-            return false;
+        if (status == 'a' || parts[3].length() != 0) {
+            try {
+                Integer.parseInt(parts[3]);
+            } catch (NumberFormatException e) {
+               System.out.println("wrong day count");
+                return false;
+            }
         }
-
-        try {
-            Double.parseDouble(parts[4]);
-        } catch (NumberFormatException e) {
-            System.out.println("wrong price");
-            return false;
+        
+        if (status == 'a' || parts[4].length() != 0) {
+            try {
+                Double.parseDouble(parts[4]);
+            } catch (NumberFormatException e) {
+                System.out.println("wrong price");
+                return false;
+            }
         }
 
         List<String> lines = new ArrayList<>();
@@ -226,31 +231,45 @@ public class Main {
             return false;
         }
 
-        if (id - 100 < 0) {
-            System.out.println("wrong id");
-            return false;
-        } else if (getLineNum(id, lines) != -1) {
-            System.out.println("wrong id");
-            return false;
-        }
-        
-        String[] partsDate = date.split("/");
-
-        int dayDate = Integer.parseInt(partsDate[0]);
-        int monthDate = Integer.parseInt(partsDate[1]);
-
-        if (dayDate < 1 || dayDate > 31) { 
-            System.out.println("wrong date");
-            return false;
-        } else if (monthDate < 1 || monthDate > 12) {
-            System.out.println("wrong date");
-            return false;
+        if (status == 'a') {
+            if (id - 100 < 0) {
+                System.out.println("wrong id");
+                return false;
+            } else if (getLineNum(id, lines) != -1) {
+                System.out.println("wrong id");
+                return false;
+            }
+        } else if (status == 'e') {
+            if (id - 100 < 0) {
+                System.out.println("wrong id");
+                return false;
+            } else if (getLineNum(id, lines) == -1) {
+                System.out.println("wrong id");
+                return false;
+            }
         }
 
-        if (!vehicle.equals("TRAIN") && !vehicle.equals("PLANE") && 
-                            !vehicle.equals("BUS") && !vehicle.equals("BOAT")) {
-            System.out.println("wrong vehicle");
-            return false;
+        if (status == 'a' || date.length() != 0) {
+            String[] partsDate = date.split("/");
+
+            int dayDate = Integer.parseInt(partsDate[0]);
+            int monthDate = Integer.parseInt(partsDate[1]);
+
+            if (dayDate < 1 || dayDate > 31) { 
+                System.out.println("wrong date");
+                return false;
+            } else if (monthDate < 1 || monthDate > 12) {
+                System.out.println("wrong date");
+                return false;
+            }
+        }
+
+        if (status == 'a' || vehicle.length() != 0) {
+            if (!vehicle.equals("TRAIN") && !vehicle.equals("PLANE") && 
+                !vehicle.equals("BUS") && !vehicle.equals("BOAT")) {
+                    System.out.println("wrong vehicle");
+                    return false;
+            }
         }
 
         return true;
@@ -297,5 +316,81 @@ public class Main {
                             " ".repeat(vehicleSymbCount-vehicle.length()) + vehicle;
                             
         System.out.println(statusLine);
+    }
+
+    public static void edit(String line) {
+        // TODO before sending chande just on db.csv
+        String file = "/home/vlad/git-practice/university/np/db.csv";
+        
+        List<String> lines = new ArrayList<>();
+        lines = readFile(file);
+
+        String[] parts = line.split(";");
+
+        int id = Integer.parseInt(parts[0]);
+        String city = parts[1];
+        String date = parts[2];
+        String days = parts[3];
+        String price = parts[4];
+        String vehicle = parts[5];
+
+        if (checkLine(line, 'e')) {
+            int lineNum = getLineNum(id, lines);
+            String oldLine = lines.get(lineNum);
+            String[] oldParts = oldLine.split(";");
+
+            String[] newParts = new String[6];
+            newParts[0] = String.format("%d", id);
+
+            if (city.length() != 0 && city != null) {
+                String[] words = city.split(" ");
+                StringBuilder formatted = new StringBuilder();
+
+                for (String word : words) {
+                    if (!word.isEmpty()) {
+                        formatted.append(Character.toUpperCase(word.charAt(0)))
+                             .append(word.substring(1))
+                             .append(" ");
+                    }
+                }
+
+                city = formatted.toString().trim();
+                newParts[1] = city;
+            } else {
+                newParts[1] = oldParts[1];
+            }
+
+            if (date.length() != 0) {
+                newParts[2] = date;
+            } else {
+                newParts[2] = oldParts[2];
+            }
+
+            if (days.length() != 0) {
+                newParts[3] = days;
+            } else {
+                newParts[3] = oldParts[3];
+            }
+
+            if (price.length() != 0) {
+                double priceNum = Double.parseDouble(price);
+                newParts[4] = String.format("%.2f", priceNum);
+            } else {
+                newParts[4] = oldParts[4];
+            }
+
+            if (vehicle.length() != 0) {
+                newParts[5] = vehicle;
+            } else {
+                newParts[5] = oldParts[5];
+            }
+
+            String newLine = String.join(";", newParts);
+
+            lines.set(lineNum, newLine);
+
+            rewriteFile(lines, file);
+            System.out.println("changed");
+        }
     }
 }
