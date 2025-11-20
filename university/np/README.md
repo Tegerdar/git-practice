@@ -1,30 +1,43 @@
-    Izstrādāt failu apstrādes sistēmu, kas ietver sevī sekojošas 
-funkcijas:
- • apskatīt faila saturu;
- • ierakstīt failā jaunu informāciju;
- • izslēgt no faila informāciju;
- • koriģēt informāciju failā;
- • sakārtot informāciju failā;
- • nodrošināt informācijas meklēšanu.
- Prasības programmai:
- • programmā jāiekļauj lietotāja nepareizu darbību apstrāde;
- • programmu ir jāizstrādā kā konsoles lietotni (bez grafiskiem 
-logiem)
-    Prasības lietotāja saskarnei:
-Programmai ir jāapstrādā vaicājumus print, add, del, edit, sort, 
-find, avg, exit. Kamēr lietotājs neievadīs komandu exit 
-programmai bezgalīga ciklā jāievada komandas un jāizpilda 
-atbilstošas darbības.
-    Vērtēšana
- • Programmas nodošana – 10 punkti (10% no gala atzīmes)– Programmu iesniegt ORTUSā līdz 6/12/2025 22:00
- • Programmas aizstāvēšana – 5 punkti (5% no gala atzīmes)– Atbildēt uz mācībspēka jautājumiem par programmas kodu līdz 
-12/12/2025
-Komanda Punktu skaits
-add     2
-del     1
-edit    2
-print   1
-sort    1
-find    1
-avg     1
-exit    1
+# Failu apstrādes sistēma
+
+Izstrādāta failu apstrādes sistēma, kas nodrošina sekojošas funkcijas:
+
+- Apskatīt faila saturu
+- Ierakstīt failā jaunu informāciju
+- Izslēgt no faila informāciju
+- Koriģēt informāciju failā
+- Sakārtot informāciju failā
+- Nodrošināt informācijas meklēšanu
+
+## Prasības programmai
+
+- Programmā jāiekļauj lietotāja nepareizu darbību apstrāde
+- Programma jāizstrādā kā **konsoles lietotne** (bez grafiskiem logiem)
+
+## Prasības lietotāja saskarnei
+
+Programmai jāapstrādā sekojošie komandu vaicājumi:
+
+
+Programmai jādarbojas **bezgalīgā ciklā**, kamēr lietotājs neievadīs komandu `exit`.  
+Katra komanda veic atbilstošas darbības ar faila saturu.
+
+## Vērtēšana
+
+- **Programmas nodošana** – 10 punkti (10% no gala atzīmes)  
+  Programmu iesniegt ORTUSā līdz **6/12/2025 22:00**
+- **Programmas aizstāvēšana** – 5 punkti (5% no gala atzīmes)  
+  Atbildēt uz mācībspēka jautājumiem par programmas kodu līdz **12/12/2025**
+
+### Komandu punktu sadalījums
+
+| Komanda | Punktu skaits |
+|---------|---------------|
+| add     | 2             |
+| del     | 1             |
+| edit    | 2             |
+| print   | 1             |
+| sort    | 1             |
+| find    | 1             |
+| avg     | 1             |
+| exit    | 1             |
