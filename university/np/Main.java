@@ -3,6 +3,7 @@ package university.np;
 // 251RDB010 Vladislavs Lazdāns 15. grupa
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.io.BufferedReader;
@@ -42,20 +43,30 @@ public class Main {
                     break;
 
                 case "print":
-                    print();
+                    // TODO before sending chande just on db.csv
+                    String file = "/home/vlad/git-practice/university/np/db.csv";
+                    List<String> lines = new ArrayList<>();
+                    lines = readFile(file);
+                    print(lines);
                     break;
                 
                 case "sort":
-                    //sort();
+                    sort();
                     break;
                 
                 case "find":
-                    int price = sc.nextInt();
-                    //find(price);
+                    Double price;
+                    try {
+                        price = sc.nextDouble();
+                    } catch (Exception e) {
+                        System.out.println("wrong price");
+                        break;
+                    }
+                    find(price);
                     break;
                 
                 case "avg":
-                    //avg();
+                    avg();
                     break;
 
                 case "exit":
@@ -63,7 +74,7 @@ public class Main {
 					break;
 
 				default:
-					System.out.println("unknown command");
+					System.out.println("wrong command");
 					break;
 			}
 		}
@@ -198,6 +209,11 @@ public class Main {
         // status: a - add, e - edit
         String[] parts = line.split(";");
 
+        if (parts.length != 6) {
+            System.out.println("wrong field count");
+            return false;
+        }
+
         // TODO before sending chande just on db.csv
         String file = "/home/vlad/git-practice/university/np/db.csv";
 
@@ -225,11 +241,6 @@ public class Main {
         int id = Integer.parseInt(parts[0]);
         String date = parts[2];
         String vehicle = parts[5].toUpperCase();
-
-        if (parts.length != 6) {
-            System.out.println("wrong field count");
-            return false;
-        }
 
         if (status == 'a') {
             if (id - 100 < 0) {
@@ -275,9 +286,7 @@ public class Main {
         return true;
     }
 
-    public static void print() {
-        // TODO before sending chande just on db.csv
-        String file = "/home/vlad/git-practice/university/np/db.csv";
+    public static void print(List<String> lines) {
         int symbCount = 60;
         int idSymbCount = 4;
         int citySymbCount = 21;
@@ -291,9 +300,6 @@ public class Main {
         printLine(idSymbCount, citySymbCount, dateSymbCount, daysSymbCount, priceSymbCount, vehicleSymbCount,
                   "ID", "City", "Date", "Days", "Price", "Vehicle");
         System.out.println("-".repeat(symbCount));
-
-        List<String> lines = new ArrayList<>();
-        lines = readFile(file);
 
         for (String line : lines) {
             String[] parts = line.split(";");
@@ -380,7 +386,7 @@ public class Main {
             }
 
             if (vehicle.length() != 0) {
-                newParts[5] = vehicle;
+                newParts[5] = vehicle.toUpperCase();
             } else {
                 newParts[5] = oldParts[5];
             }
@@ -392,5 +398,99 @@ public class Main {
             rewriteFile(lines, file);
             System.out.println("changed");
         }
+    }
+
+    public static void sort() {
+        // TODO before sending chande just on db.csv
+        String file = "/home/vlad/git-practice/university/np/db.csv";
+
+        List<String> lines = new ArrayList<>();
+        lines = readFile(file);
+        int changes = 0;
+
+        for (int i = 0; i < lines.size() - 1; ++i) {
+            // this is not looking good :(
+            String line1 = lines.get(i);
+            String line2 = lines.get(i + 1);
+
+            String[] line1Parts = line1.split(";");
+            String[] line2Parts = line2.split(";");
+
+            String[] line1DateS = line1Parts[2].split("/");
+            String[] line2DateS = line2Parts[2].split("/");
+
+            int[] line1DateI = new int[3];
+            int[] line2DateI = new int[3];
+
+            for (int j = 0; j < 3; ++j) {
+                line1DateI[j] = Integer.parseInt(line1DateS[j]);
+            }
+            for (int j = 0; j < 3; ++j) {
+                line2DateI[j] = Integer.parseInt(line2DateS[j]);
+            }
+
+            if (line1DateI[2] > line2DateI[2]) {
+                Collections.swap(lines, i, i + 1);
+                ++changes;
+            } else if (line1DateI[1] > line2DateI[1] && line1DateI[2] == line2DateI[2]) {
+                Collections.swap(lines, i, i + 1);
+                ++changes;
+            } else if (line1DateI[0] > line2DateI[0] && line1DateI[1] == line2DateI[1] && line1DateI[2] == line2DateI[2]) {
+                Collections.swap(lines, i, i + 1);
+                ++changes;
+            }
+
+            if (changes > 0) {
+                changes = 0;
+                i = 0;
+            }
+        }
+
+        rewriteFile(lines, file);
+
+        System.out.println("sorted");
+    }
+
+    public static void find (Double price) {
+        // TODO before sending chande just on db.csv
+        String file = "/home/vlad/git-practice/university/np/db.csv";
+
+        List<String> lines = new ArrayList<>();
+        lines = readFile(file);
+
+        for (int i = 0; i < lines.size(); ++i) {
+            String line = lines.get(i);
+            String[] parts = line.split(";");
+
+            Double priceLine = Double.parseDouble(parts[4]);
+            if (priceLine >= price) {
+                lines.remove(i);
+                --i;
+            }
+        }
+
+        print(lines);
+    }
+
+    public static void avg() {
+        // TODO before sending chande just on db.csv
+        String file = "/home/vlad/git-practice/university/np/db.csv";
+
+        List<String> lines = new ArrayList<>();
+        lines = readFile(file);
+        Double avg = 0.0;
+
+        for (int i = 0; i < lines.size(); ++i) {
+            String line = lines.get(i);
+            String[] parts = line.split(";");
+
+            Double priceLine = Double.parseDouble(parts[4]);
+            
+            avg += priceLine;
+        }
+
+        avg /= lines.size();
+
+        System.out.printf("average=%.2f\n", avg);
     }
 }
