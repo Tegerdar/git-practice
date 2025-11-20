@@ -1,3 +1,5 @@
+package university.ld11.u2;
+
 // 251RDB010 Vladislavs Lazdāns 15
 
 import java.io.EOFException;

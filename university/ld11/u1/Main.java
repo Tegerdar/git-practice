@@ -115,7 +115,13 @@ public class Main {
         String filename = sc.nextLine();
 
         System.out.print("\nInput number to delete: ");
-        int num = sc.nextInt();
+        int num;
+        try {
+            num = Integer.parseInt(sc.nextLine());
+        } catch (Exception e) {
+            System.out.println("Input error");
+            return;
+        }
 
         List<Integer> fileContent = new ArrayList<>();
 
